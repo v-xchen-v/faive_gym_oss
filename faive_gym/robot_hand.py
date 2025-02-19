@@ -162,10 +162,10 @@ class RobotHand(VecTask):
         self.pose_sensor_state = self.rigid_body_states[:, self.pose_sensor_handles][
             :, :, 0:13
         ]
-        self.vec_sensor_tensor = gymtorch.wrap_tensor(sensor_tensor).view(
-            self.num_envs, -1
-        )
-        assert self.vec_sensor_tensor.shape[1] % 6 == 0  # sanity check
+        # self.vec_sensor_tensor = gymtorch.wrap_tensor(sensor_tensor).view(
+        #     self.num_envs, -1
+        # )
+        # assert self.vec_sensor_tensor.shape[1] % 6 == 0  # sanity check
 
         num_dofs = self.gym.get_sim_dof_count(self.sim) // self.num_envs
         # current position control targets for each joint (joints with no actuators should be set to 0)
@@ -203,6 +203,7 @@ class RobotHand(VecTask):
 
         # reserve space for previous observation buffer (for object pose and robot dof)
         len_obj_pose_buffer = self.obs_dims["obj_pose_history"]
+        print(f'obs_dims: {self.obs_dims}')
         assert len_obj_pose_buffer % 7 == 0, \
             "obj_pose_buffer length must be a multiple of 7"
         assert len_obj_pose_buffer >=  7 * 2, \
@@ -215,6 +216,7 @@ class RobotHand(VecTask):
         )
 
         len_dof_pos_buffer = self.obs_dims["dof_pos_history"]
+        print(f'num_actuated_dofs: {self.num_actuated_dofs}')
         assert len_dof_pos_buffer % self.num_actuated_dofs == 0, \
             "dof_pos_buffer length must be a multiple of the " + \
                     f"actuated dofs ({self.num_actuated_dofs})"
@@ -941,7 +943,8 @@ class RobotHand(VecTask):
         if self.physics_engine == gymapi.SIM_PHYSX:
             asset_options.use_physx_armature = True
         # Note - DOF mode is set in the MJCF file and loaded by Isaac Gym
-        asset_options.default_dof_drive_mode = gymapi.DOF_MODE_NONE
+        # asset_options.default_dof_drive_mode = gymapi.DOF_MODE_NONE
+        asset_options.default_dof_drive_mode = gymapi.DOF_MODE_POS
 
         hand_asset = self.gym.load_asset(
             self.sim, asset_root, hand_asset_file, asset_options
@@ -980,16 +983,31 @@ class RobotHand(VecTask):
             tendon_props[i].damping = t_damping
         self.gym.set_asset_tendon_properties(hand_asset, tendon_props)
 
-        actuated_dof_names = [
-            self.gym.get_asset_actuator_joint_name(hand_asset, i)
-            for i in range(self.num_hand_actuators)
-        ]
+        
+        # Get DOF names
+        dof_names =self.gym.get_asset_dof_names(hand_asset)
+
+        # Print DOF names
+        print("List of DOF names:", dof_names)
+
+        # List index and corresponding DOF name
         actuated_dof_indices = []
-        for name in actuated_dof_names:
-            dof_index = self.gym.find_asset_dof_index(hand_asset, name)
-            assert dof_index != -1, f"Could not find dof index for {name}"
-            print(f"{name}\t->\t{dof_index}")
-            actuated_dof_indices.append(dof_index)
+        for i, name in enumerate(dof_names):
+            print(f"Index {i}: {name}")
+            actuated_dof_indices.append(i)
+            
+        # this not work for urdf
+        # actuated_dof_names = [
+        #     self.gym.get_asset_actuator_joint_name(hand_asset, i)
+        #     for i in range(self.num_hand_actuators)
+        # ]
+    
+        # actuated_dof_indices = []
+        # for name in actuated_dof_names:
+        #     dof_index = self.gym.find_asset_dof_index(hand_asset, name)
+        #     assert dof_index != -1, f"Could not find dof index for {name}"
+        #     print(f"{name}\t->\t{dof_index}")
+        #     actuated_dof_indices.append(dof_index)
 
         # get hand dof properties, loaded by Isaac Gym from the MJCF file
         hand_dof_props = self.gym.get_asset_dof_properties(hand_asset)

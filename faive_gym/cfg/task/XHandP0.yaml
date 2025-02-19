@@ -1,0 +1,49 @@
+# load the default environment parameters, and override the ones we want to change
+defaults:
+  - RobotHandDefault
+
+# The base RobotHand class suffices for the default P0 robot for now
+name: RobotHand
+
+env:
+  numActions: 12
+  object_start_offset: [0, -0.10, 0.05]
+  object_type: ["sphere"]
+
+asset:
+  model_file: "urdf/xhand/xhand_right.urdf"
+  # force_sensor_names: ["right_hand_index_rota_tip", "right_hand_mid_tip", "right_hand_ring_tip", "right_hand_pinky_tip", "right_hand_thumb_rota_tip"]
+  # pose_sensor_names: ["right_hand_index_rota_tip", "right_hand_mid_tip", "right_hand_ring_tip", "right_hand_pinky_tip", "right_hand_thumb_rota_tip"]
+  force_sensor_names: []
+  pose_sensor_names: []
+
+observations:
+  obs_dims:
+    dof_position: 12
+    dof_pos_target: 12
+    dof_speed: 12
+    dof_speed_numerical: 12
+    dof_force: 12
+    obj_pos: 3
+    obj_quat: 4
+    obj_linvel: 3
+    obj_angvel: 3
+    obj_linvel_numerical: 3
+    obj_angvel_numerical: 3
+    goal_pos: 3
+    goal_quat: 4
+    goal_quat_diff: 4
+    # pose_sensor_pos: 15 # 3 * 5
+    # pose_sensor_quat: 20  # 4 * 5 
+    # pose_sensor_linvel: 15  # 3 * 5
+    # pose_sensor_angvel: 15  # 3 * 5
+    # force_sensor_force: 30  # 6 * 5
+    actions: 12 
+    obj_pose_history: 35 # 7 dof pose * 5 history length
+    dof_pos_history: 60  # 12 dof joint * 5 history length
+
+  actor_observations: ["dof_position", "dof_speed", "dof_force",
+                       "obj_pos", "obj_quat", "obj_linvel", "obj_angvel",
+                       "goal_pos", "goal_quat", "goal_quat_diff",
+                      #  "pose_sensor_pos", "pose_sensor_quat", "pose_sensor_linvel", "pose_sensor_angvel", "force_sensor_force",
+                       "actions"]
