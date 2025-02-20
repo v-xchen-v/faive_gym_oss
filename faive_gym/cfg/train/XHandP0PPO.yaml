@@ -1,2 +1,6 @@
 defaults:
   - RobotHandDefaultPPO
+
+params:
+  config:
+    name: ${resolve_default:XHand,${....experiment}}

@@ -1,0 +1,74 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: Current File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Debug Train XHandRollBall",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "train.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/faive_gym",
+            "env": {
+              "PYTHONPATH": "${workspaceFolder}/python:${env:PYTHONPATH}"
+            },
+            "args": [
+                "task=XHandP0",
+                "headless=False",
+            ],
+            "justMyCode": false,
+        },
+        {
+            "name": "Train XHandRollBall",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "train.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/faive_gym",
+            "env": {
+              "PYTHONPATH": "${workspaceFolder}/python:${env:PYTHONPATH}"
+            },
+            "args": [
+                "task=XHandP0",
+                "headless=True",
+                "wandb_activate=True",
+                "wandb_group=faive",
+                "wandb_project=try_faive_project",
+                "wandb_name=v-xchen-v-msra",
+                "capture_video=True",
+                "force_render=False"
+            ],
+            "justMyCode": false,
+        },
+        {
+            "name": "Play XHandRollBall",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "train.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/faive_gym",
+            "env": {
+              "PYTHONPATH": "${workspaceFolder}/python:${env:PYTHONPATH}"
+            },
+            "args": [
+                "task=XHandP0",
+                "test=True",
+                "num_envs=3",
+                "checkpoint=/home/xichen/Documents/repos/faive_gym_oss/faive_gym/runs/XHand/nn/last_XHand_ep_2600_rew_42.995953.pth",
+                "headless=False",
+                "capture_video=True",
+                "force_render=False"
+            ],
+            "justMyCode": false,
+        }
+    ]
+}

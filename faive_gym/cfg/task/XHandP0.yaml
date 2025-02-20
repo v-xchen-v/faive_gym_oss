@@ -47,3 +47,7 @@ observations:
                        "goal_pos", "goal_quat", "goal_quat_diff",
                       #  "pose_sensor_pos", "pose_sensor_quat", "pose_sensor_linvel", "pose_sensor_angvel", "force_sensor_force",
                        "actions"]
+
+logging: 
+  record_dofs: True
+  record_length: 600 # step

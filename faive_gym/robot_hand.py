@@ -203,7 +203,7 @@ class RobotHand(VecTask):
 
         # reserve space for previous observation buffer (for object pose and robot dof)
         len_obj_pose_buffer = self.obs_dims["obj_pose_history"]
-        print(f'obs_dims: {self.obs_dims}')
+        # print(f'obs_dims: {self.obs_dims}')
         assert len_obj_pose_buffer % 7 == 0, \
             "obj_pose_buffer length must be a multiple of 7"
         assert len_obj_pose_buffer >=  7 * 2, \
@@ -216,7 +216,7 @@ class RobotHand(VecTask):
         )
 
         len_dof_pos_buffer = self.obs_dims["dof_pos_history"]
-        print(f'num_actuated_dofs: {self.num_actuated_dofs}')
+        # print(f'num_actuated_dofs: {self.num_actuated_dofs}')
         assert len_dof_pos_buffer % self.num_actuated_dofs == 0, \
             "dof_pos_buffer length must be a multiple of the " + \
                     f"actuated dofs ({self.num_actuated_dofs})"
