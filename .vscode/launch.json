@@ -62,8 +62,8 @@
             "args": [
                 "task=XHandP0",
                 "test=True",
-                "num_envs=3",
-                "checkpoint=/home/xichen/Documents/repos/faive_gym_oss/faive_gym/runs/XHand/nn/last_XHand_ep_2600_rew_42.995953.pth",
+                "num_envs=1",
+                "checkpoint=/home/xichen/Documents/repos/faive_gym_oss/faive_gym/runs/XHand/nn/last_XHand_ep_4400_rew_46.323856.pth",
                 "headless=False",
                 "capture_video=True",
                 "force_render=False"

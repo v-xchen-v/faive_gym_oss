@@ -315,11 +315,11 @@ class RobotHand(VecTask):
         ]
 
         # update the history buffers
-        self.obj_pose_buffer[:,:-7] = self.obj_pose_buffer[:,7:]
+        self.obj_pose_buffer[:,:-7] = self.obj_pose_buffer[:,7:].clone()
         self.obj_pose_buffer[:,-7:] = self.object_pose.clone()
         self.obj_pose_buffer[:,-7:-4] -= self.object_init_states[:, :3]  # try to have zero mean
 
-        self.dof_pos_buffer[:,:-self.num_actuated_dofs] = self.dof_pos_buffer[:,self.num_actuated_dofs:]
+        self.dof_pos_buffer[:,:-self.num_actuated_dofs] = self.dof_pos_buffer[:,self.num_actuated_dofs:].clone()
         self.dof_pos_buffer[:,-self.num_actuated_dofs:] = unscale(
             self.hand_dof_pos[:, self.actuated_dof_indices],
             self.actuated_dof_lower_limits,

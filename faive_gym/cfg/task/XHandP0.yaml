@@ -50,4 +50,10 @@ observations:
 
 logging: 
   record_dofs: True
-  record_length: 600 # step
+  record_length: 360 # step
+
+visualization:
+  camera_pos_start: [-0.5, -1.0, 0.6]
+  camera_target_start: [0, 0, 0.5]
+  move_camera: False    # set to true if you want cool camera motion
+  camera_movement_vector: [.005, 0.005, 0.0]
