@@ -9,6 +9,8 @@ env:
   numActions: 12
   object_start_offset: [0, -0.10, 0.05]
   object_type: ["sphere"]
+  # controlFrequencyInv: 4 # /4, how many simulation steps per one control step should be performed.
+  controlFrequencyInv: 2 # /2, how many simulation steps per one control step should be performed.
 
 asset:
   model_file: "urdf/xhand/xhand_right.urdf"
@@ -50,10 +52,14 @@ observations:
 
 logging: 
   record_dofs: True
-  record_length: 360 # step
+  record_length: 720 # step
 
 visualization:
   camera_pos_start: [-0.5, -1.0, 0.6]
   camera_target_start: [0, 0, 0.5]
   move_camera: False    # set to true if you want cool camera motion
   camera_movement_vector: [.005, 0.005, 0.0]
+
+sim:
+  physx:
+      contact_offset: 0.003

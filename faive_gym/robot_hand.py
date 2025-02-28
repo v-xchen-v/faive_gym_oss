@@ -1062,6 +1062,16 @@ class RobotHand(VecTask):
                 self.actuated_dof_lower_limits[i] = actuated_dof_range_override[i][0]
                 self.actuated_dof_upper_limits[i] = actuated_dof_range_override[i][1]
 
+        
+        # set drivemode and parameters of DoFs
+        for i in range(self.num_hand_dofs):
+            hand_dof_props['driveMode'][i] = gymapi.DOF_MODE_POS
+            hand_dof_props['effort'][i] = 0.2
+            hand_dof_props['stiffness'][i] = 1
+            hand_dof_props['damping'][i] = 0.1
+            hand_dof_props['friction'][i] = 0.05
+            hand_dof_props['armature'][i] = 0.001
+        
         # create handles to access body parts of interest and force sensors
         sensor_pose = gymapi.Transform(gymapi.Vec3(0.0, 0.0, 0.0))
         
