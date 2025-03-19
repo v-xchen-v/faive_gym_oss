@@ -59,8 +59,8 @@ names = [
     "right_hand_mid_joint2",
     "right_hand_pinky_joint1",
     "right_hand_pinky_joint2",
-    "right_hand_ring_joint2",
     "right_hand_ring_joint1",
+    "right_hand_ring_joint2",
     "right_hand_thumb_bend_joint",
     "right_hand_thumb_rota_joint1",
     "right_hand_thumb_rota_joint2",
@@ -80,33 +80,33 @@ def map_values(arr, new_min, new_max, old_min=-1, old_max=1):
 #
 print(np.clip(data[0, :, indexs[2]], 0, 10))
 robot.animate(cfg_trajectory={
-    names[0]:  map_values(data[0, :, indexs[0]], 0, 1.83),
-    names[1]:  map_values(data[0, :, indexs[1]], -0.175, 0.175),
+    names[0]:  map_values(data[0, :, indexs[0]], -0.175, 0.175),
+    names[1]:  map_values(data[0, :, indexs[1]], 0, 1.92),
     names[2]:  map_values(data[0, :, indexs[2]], 0, 1.92),
     names[3]:  map_values(data[0, :, indexs[3]], 0, 1.92),
     names[4]:  map_values(data[0, :, indexs[4]], 0, 1.92),
-    names[5]:  map_values(data[0, :, indexs[5]], -1.05, 1.57),
+    names[5]:  map_values(data[0, :, indexs[5]], 0, 1.92),
     names[6]:  map_values(data[0, :, indexs[6]], 0, 1.92),
     names[7]:  map_values(data[0, :, indexs[7]], 0, 1.92),
     names[8]:  map_values(data[0, :, indexs[8]], 0, 1.92),
-    names[9]:  map_values(data[0, :, indexs[9]], 0, 1.92),
-    names[10]: map_values(data[0, :, indexs[10]], -0.175, 1.83),
-    names[11]: map_values(data[0, :, indexs[11]],    0, 1.92),
+    names[9]:  map_values(data[0, :, indexs[9]], 0, 1.83),
+    names[10]: map_values(data[0, :, indexs[10]], -1.05, 1.57),
+    names[11]: map_values(data[0, :, indexs[11]], -0.175, 1.83),
 })
 
 stacked_arr = np.stack([
-    map_values(data[0, :, indexs[0]], 0, 1.83),
-    map_values(data[0, :, indexs[1]], -0.175, 0.175),
+    map_values(data[0, :, indexs[0]], -0.175, 0.175),
+    map_values(data[0, :, indexs[1]], 0, 1.92),
     map_values(data[0, :, indexs[2]], 0, 1.92),
     map_values(data[0, :, indexs[3]], 0, 1.92),
     map_values(data[0, :, indexs[4]], 0, 1.92),
-    map_values(data[0, :, indexs[5]], -1.05, 1.57),
+    map_values(data[0, :, indexs[5]], 0, 1.92),
     map_values(data[0, :, indexs[6]], 0, 1.92),
     map_values(data[0, :, indexs[7]], 0, 1.92),
     map_values(data[0, :, indexs[8]], 0, 1.92),
-    map_values(data[0, :, indexs[9]], 0, 1.92),
-    map_values(data[0, :, indexs[10]], -0.175, 1.83),
-    map_values(data[0, :, indexs[11]],    0, 1.92)], axis=1)
+    map_values(data[0, :, indexs[9]], 0, 1.83),
+    map_values(data[0, :, indexs[10]], -1.05, 1.57),
+    map_values(data[0, :, indexs[11]], -0.175, 1.83)], axis=1)
 expanded_arr = np.expand_dims(stacked_arr, axis=0)
 print(expanded_arr.shape)
 np.save(f'{RECORD_FILE_NAME}_scale.npy', expanded_arr)
