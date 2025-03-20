@@ -37,6 +37,7 @@ env:
   hand_start_p: [0, 0, 0.5]
   # hand start pose quaternion (x, y, z, w)
   # rotate 290 degrees around x axis to make palm face up, and slightly tilt it downwards
+  # rotate -70 degrees around x axis and 180 degrees around z axis to make xhand plam face up
   hand_start_r: [ 0, 0.5735764, 0.819152, 0 ]
 
 asset:

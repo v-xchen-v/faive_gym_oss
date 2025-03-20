@@ -14,7 +14,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--record_file_name', type=str, default=
-                    'faive_gym/videos/selected_xhand_rollball_2025-02-20/XHand_2025-02-20_17-52-29/2025-02-20_17-52-34_dof_poses')
+                    'faive_gym/videos/XHandHoldDroppingBall_2025-03-20_10-43-35/2025-03-20_10-43-38_dof_poses')
 # add a bool argument to specify whether to animate or not
 parser.add_argument('--animate', type=bool, default=True)
 argparse = parser.parse_args()
@@ -24,9 +24,13 @@ args = parser.parse_args()
 RECORD_FILE_NAME = argparse.record_file_name
 if RECORD_FILE_NAME[-4:] == '.npy':
     RECORD_FILE_NAME = RECORD_FILE_NAME[:-4]
+# data shape as: [num_envs, n_steps, n_dofs]
 data = np.load(f'{RECORD_FILE_NAME}.npy')
+(num_envs, n_steps, n_dofs) = data.shape
+# remove the last n rows where data all 0
+data = data[~np.all(data == 0, axis=-1)].reshape(num_envs, -1, n_dofs)
 
-robot = URDF.load('../assets/urdf/xhand/xhand_right.urdf')
+robot = URDF.load('./assets/urdf/xhand/xhand_right.urdf')
 
 # for link in robot.links:
 #     print(link.name)

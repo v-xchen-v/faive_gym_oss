@@ -1,0 +1,98 @@
+
+defaults:
+  - RobotHandDefault
+
+name: XHandHoldDroppingBall
+
+env:
+  numActions: 12
+  object_start_offset: [-0.01, -0.10, 0.20]
+  object_type: ["sphere"]
+  controlFrequencyInv: 2 # 30hz
+  episode_length_s: 2  # episode length in seconds
+  # hand_start_r: [ 0, 0, 1, 0 ] z:180
+  hand_start_r: [ 0, 0.7071068, 0.7071068, 0 ] # x:-90 z:180
+  # /2, how many simulation steps per one control step should be performed.
+  x_rotation_dir: 1.0 # rotation direction: positive is the same direction as TEDx
+
+asset:
+  model_file: "urdf/xhand/xhand_right.urdf"
+  # force_sensor_names: ["right_hand_index_rota_tip", "right_hand_mid_tip", "right_hand_ring_tip", "right_hand_pinky_tip", "right_hand_thumb_rota_tip"]
+  # pose_sensor_names: ["right_hand_index_rota_tip", "right_hand_mid_tip", "right_hand_ring_tip", "right_hand_pinky_tip", "right_hand_thumb_rota_tip"]
+  force_sensor_names: []
+  pose_sensor_names: []
+
+rewards:
+  scales:
+    action_penalty: -0.002
+    dof_acc_penalty: -0.0000001 #        Penalize joint acceleration, could remove shaking
+    dof_vel_penalty: -0.001  # Penalize speed of the joints, smooth out movement
+    dof_trq_penalty: 0.
+    success: 0.
+    drop_penalty: -5.
+    simple_hand_flat: 0.
+    
+    reorienttask_obj_dist: 0.
+    reorienttask_obj_rot: 0.
+
+    obj_linear_vel: -0.2
+    obj_angular_vel: -0.2
+
+    obj_hand_dist: 0.2
+
+    # rottask_obj_xrotvel: -0.01 # small penalty for object xrot velocity
+    # crawl_forward_vel: 20.
+    # crawl_penalty_upsidedown: -0.1
+
+  fall_dist_threshold: 0.15
+
+observations:
+  obs_dims:
+    dof_position: 12
+    dof_pos_target: 12
+    dof_speed: 12
+    dof_speed_numerical: 12
+    dof_force: 12
+    obj_pos: 3
+    obj_quat: 4
+    obj_linvel: 3
+    obj_angvel: 3
+    obj_linvel_numerical: 3
+    obj_angvel_numerical: 3
+    goal_pos: 3
+    goal_quat: 4
+    goal_quat_diff: 4
+    # pose_sensor_pos: 15 # 3 * 5
+    # pose_sensor_quat: 20  # 4 * 5 
+    # pose_sensor_linvel: 15  # 3 * 5
+    # pose_sensor_angvel: 15  # 3 * 5
+    # force_sensor_force: 30  # 6 * 5
+    actions: 12 
+    obj_pose_history: 35 # 7 dof pose * 5 history length
+    dof_pos_history: 60  # 12 dof joint * 5 history length
+
+
+  # change to include more stuff about body
+  actor_observations: ["dof_position", "dof_speed", "dof_force",
+                       "obj_pos", "obj_quat", "obj_linvel", "obj_angvel_numerical",
+                       "actions"]
+
+logging: 
+  record_dofs: True
+  record_length: 720 # step
+  record_ending_at_reset: True
+
+visualization:
+  camera_pos_start: [-0.5, -1.0, 0.6]
+  camera_target_start: [0, 0, 0.5]
+  move_camera: False    # set to true if you want cool camera motion
+  camera_movement_vector: [.005, 0.005, 0.0]
+
+sim:
+  physx:
+      contact_offset: 0.002
+
+
+reset_noise:
+  # how much noise to add to various dofs when resetting
+  object_pos: 0.015

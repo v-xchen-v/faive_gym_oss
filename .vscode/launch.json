@@ -69,6 +69,51 @@
                 "force_render=False"
             ],
             "justMyCode": false,
-        }
+        },
+        {
+            // cd faive_gym
+            // python train.py task=XHandHoldDroppingBall headless=True wandb_activate=True wandb_group=faive wandb_project=try_faive_project wandb_name=v-xchen-v-msra capture_video=True force_render=False
+            "name": "Train XHandHoldDroppingBall",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "train.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/faive_gym",
+            "env": {
+              "PYTHONPATH": "${workspaceFolder}/python:${env:PYTHONPATH}"
+            },
+            "args": [
+                "task=XHandHoldDroppingBall",
+                "headless=False",
+                // "wandb_activate=True",
+                // "wandb_group=faive",
+                // "wandb_project=try_faive_project",
+                // "wandb_name=v-xchen-v-msra",
+                // "capture_video=True",
+                // "force_render=False"
+            ],
+            "justMyCode": false,
+        },
+        {
+            "name": "Play XHandHoldDroppingBall",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "train.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/faive_gym",
+            "env": {
+              "PYTHONPATH": "${workspaceFolder}/python:${env:PYTHONPATH}"
+            },
+            "args": [
+                "task=XHandHoldDroppingBall",
+                "test=True",
+                "num_envs=1",
+                "checkpoint=/home/yichao/Documents/repos/faive_gym_oss/faive_gym/runs/XHandHoldDroppingBall/nn/XHandHoldDroppingBall.pth",
+                "headless=False",
+                "capture_video=True",
+                "force_render=False"
+            ],
+            "justMyCode": false,
+        },
     ]
 }

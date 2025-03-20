@@ -1,0 +1,8 @@
+defaults:
+  - RobotHandDefaultPPO
+
+params:
+  config:
+    name: ${resolve_default:XHandHoldDroppingBall,${....experiment}}  
+    max_epochs: ${resolve_default:1000,${....max_iterations}}
+    save_frequency: 50

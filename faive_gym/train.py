@@ -49,8 +49,11 @@ from isaacgymenvs.utils.utils import set_np_formatting, set_seed
 from isaacgymenvs.tasks import isaacgym_task_map
 from faive_gym.robot_hand import RobotHand
 from faive_gym.tasks.crawl import Crawl
+from faive_gym.tasks.hold_dropping_ball import XHandHoldDroppingBall
 isaacgym_task_map["RobotHand"] = RobotHand
 isaacgym_task_map["Crawl"] = Crawl
+# register custom tasks for isaacgym here
+isaacgym_task_map["XHandHoldDroppingBall"] = XHandHoldDroppingBall
 
 ## OmegaConf & Hydra Config
 

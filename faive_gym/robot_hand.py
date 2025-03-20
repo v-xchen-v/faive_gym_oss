@@ -233,6 +233,7 @@ class RobotHand(VecTask):
         # joint and sensor readout recording buffers
         self.record_dof_poses = self.cfg["logging"]["record_dofs"]
         self.record_length = self.cfg["logging"]["record_length"]
+        self.record_ending_at_reset = self.cfg["logging"]["record_ending_at_reset"]
         self.record_observations = self.cfg["logging"]["record_observations"]
         if self.record_dof_poses:
             self.dof_pose_recording = torch.zeros(
@@ -396,12 +397,7 @@ class RobotHand(VecTask):
         Records the dof and/or observation buffers and saves them to a .npy file.
         '''
         print("Recording!")
-        if self.num_recorded_steps < self.record_length:
-            if self.record_dof_poses:
-                self.dof_pose_recording[:,self.num_recorded_steps, :] = self.dof_pos_buffer[:,-self.num_actuated_dofs:]
-            if self.record_observations:
-                self.observation_recording[:,self.num_recorded_steps, :] = self.obs_buf
-        else:
+        if self.num_recorded_steps >= self.record_length or (self.record_ending_at_reset and self.reset_buf.any()):
             if self.record_dof_poses:
                 np.save(self.recording_save_path + "_dof_poses.npy", self.dof_pose_recording.numpy(force=True))
                 print('dof poses saved')
@@ -409,6 +405,11 @@ class RobotHand(VecTask):
                 np.save(self.recording_save_path + "_observation.npy", self.observation_recording.numpy(force=True))
             print("all recordings saved, exiting")
             exit()
+        else:
+            if self.record_dof_poses:
+                self.dof_pose_recording[:,self.num_recorded_steps, :] = self.dof_pos_buffer[:,-self.num_actuated_dofs:]
+            if self.record_observations:
+                self.observation_recording[:,self.num_recorded_steps, :] = self.obs_buf
         self.num_recorded_steps += 1
 
     def check_termination(self):
@@ -1066,11 +1067,11 @@ class RobotHand(VecTask):
         # set drivemode and parameters of DoFs
         for i in range(self.num_hand_dofs):
             hand_dof_props['driveMode'][i] = gymapi.DOF_MODE_POS
-            hand_dof_props['effort'][i] = 0.2
+            hand_dof_props['effort'][i] = 1
             hand_dof_props['stiffness'][i] = 1
             hand_dof_props['damping'][i] = 0.1
-            hand_dof_props['friction'][i] = 0.05
-            hand_dof_props['armature'][i] = 0.001
+            hand_dof_props['friction'][i] = 0.01
+            hand_dof_props['armature'][i] = 0.0001
         
         # create handles to access body parts of interest and force sensors
         sensor_pose = gymapi.Transform(gymapi.Vec3(0.0, 0.0, 0.0))
@@ -1191,6 +1192,23 @@ class RobotHand(VecTask):
             object_handle = self.gym.create_actor(
                 env_ptr, object_asset_list[object_index], object_start_pose, "object", i, 0, 1
             )
+            
+            # Modify rigid shape properties
+            props = self.gym.get_actor_rigid_shape_properties(env_ptr, object_handle)
+
+            # for p in props:
+            #     p.static_friction = 0.5    # Static friction
+            #     p.dynamic_friction = 0.3   # Dynamic friction
+            #     p.restitution = 0.2        # Bounciness
+            
+            props[0].friction = 0.5
+            props[0].rolling_friction = 0.3
+            props[0].torsion_friction = 0.3
+            props[0].restitution = 0.2 # Bounciness
+
+            # Apply the modified properties
+            self.gym.set_actor_rigid_shape_properties(env_ptr, object_handle, props)
+
             self.object_type[i][object_index] = 1
             object_init_states.append(
                 [
